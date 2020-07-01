@@ -24,6 +24,7 @@ namespace ReviewApp.Mappers
             {
                 Id = product.Id,
                 Name = product.Name,
+                CompanyId = product.CompanyId,
                 Description = product.Description,
                 ReviewViews = BuildReviewViewList(product.Reviews)
             };

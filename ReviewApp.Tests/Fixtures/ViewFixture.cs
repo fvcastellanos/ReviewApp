@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using ReviewApp.Domain.Views;
 
@@ -13,6 +14,29 @@ namespace ReviewApp.Tests.Fixtures
                 Name = name,
                 Description = "Test",
                 ProductViews = new List<ProductView>()
+            };
+        }
+
+        public static ProductView BuildProductView(string name)
+        {
+            return new ProductView()
+            {
+                Id = 1,
+                Name = name,
+                Description = "Test",
+                CompanyId = 1,
+                ReviewViews = new List<ReviewView>()
+            };
+        }
+
+        public static ReviewView BuildReviewView(string name)
+        {
+            return new ReviewView()
+            {
+                Id = 1,
+                Content = "Test",
+                ReviewDate = DateTime.MinValue,
+                ProductId = 1
             };
         }
     }

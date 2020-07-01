@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using LanguageExt;
 using Microsoft.Extensions.Logging;
 using ReviewApp.Data;
 using ReviewApp.Domain.Views;
+using ReviewApp.Mappers;
 
 namespace ReviewApp.Services
 {
@@ -23,26 +25,59 @@ namespace ReviewApp.Services
             try
             {
                 var products = _dbContext.Products;
-                
-                
-                
+
+                return products.Select(ProductMapper.ToView)
+                    .ToList();
             }
             catch (Exception ex)
             {
                 _logger.LogError("can't get product list - ", ex);
                 return "can't get product list";
             }
-            throw new System.NotImplementedException();
         }
 
         public Either<string, ProductView> Get(long id)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                var product = _dbContext.Products.Find(id);
+
+                if (product == null)
+                {
+                    return "product not found";
+                }
+
+                return ProductMapper.ToView(product);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("can't get product with id: {0} - ", id, ex);
+                return "can't get product";
+            }
         }
 
         public Either<string, ProductView> Add(ProductView productView)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                var productExists = _dbContext.Products.Exists(product => product.Name.Equals(productView.Name));
+
+                if (productExists)
+                {
+                    return "product already exists";
+                }
+
+                var product = ProductMapper.ToModel(productView);
+                _dbContext.Products.Add(product);
+                _dbContext.SaveChanges();
+
+                return ProductMapper.ToView(product);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("can't add product - ", ex);
+                return "can't add product";
+            }
         }
 
         public Either<string, ProductView> Update(ProductView productView)

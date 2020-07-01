@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ReviewApp.Data;
+using ReviewApp.Services;
 
 namespace ReviewApp
 {
@@ -27,6 +28,8 @@ namespace ReviewApp
                 options.UseMySQL("server=localhost;database=review_application;user=root;password=r00t")
             );
 
+            services.AddScoped<ICompanyService, CompanyService>();
+            
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
