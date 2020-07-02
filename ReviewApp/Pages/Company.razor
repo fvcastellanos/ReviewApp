@@ -34,7 +34,11 @@
                             <td>@company.Id</td>
                             <td>@company.Name</td>
                             <td>@company.Description</td>
-                            <td></td>
+                            <td>
+                                <button class="btn btn-primary" @onclick="() => GetCompany(company.Id)" ><span class="oi oi-brush" aria-hidden="true"></span></button>
+                                <button class="btn btn-danger" @onclick="() => GetDeleteInformation(company.Id, company.Name)"><span class="oi oi-delete" aria-hidden="true"></span></button>
+                                
+                            </td>
                         </tr>
                     }
                 </tbody>
@@ -44,22 +48,70 @@
     </div>
 </div>
 
-@if (DisplayAddModal)
+@if (DisplayModal)
 {
-    <EditForm Model="@CompanyModel" >
-        <DataAnnotationsValidator/>
-        <ValidationSummary/>
-        <div class="form-row">
-            <div class="form-group col-6">
-                <label for="name">Name</label>
-                <input type="text"  class="form-control" id="name" placeholder="Name" @bind="CompanyModel.Name"/>
-            </div>
-            <div class="form-group col-6">
-                <label for="description">Description</label>
-                <input type="text"  class="form-control" id="description" placeholder="Description" @bind="CompanyModel.Description"/>
+    <div class="modal" tabindex="-1" role="dialog" style="display: block">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Company</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="HideModal">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @if (HasModalError)
+                    {
+                        <div class="alert alert-danger error-message" role="alert">
+                            @ModalErrorMessage
+                        </div>
+                    }
+                    <EditForm Model="@CompanyModel" OnValidSubmit="SaveChanges">
+                        <DataAnnotationsValidator/>
+                        <ValidationSummary/>
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" class="form-control" id="name" placeholder="Name" @bind="CompanyModel.Name"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea class="form-control" id="description" @bind="CompanyModel.Description" row="4"></textarea>
+                        </div>
+                        <input type="submit" class="btn btn-primary" value="Save"/>
+                        <input type="button" class="btn" value="Cancel" @onclick="HideModal"/>
+                    </EditForm>
+                </div>
             </div>
         </div>
-        <input type="submit" class="btn btn-primary" value="Add" />
-    </EditForm>    
+    </div>    
 }
 
+@if (DeleteModal)
+{
+    <div class="modal" tabindex="-1" role="dialog" style="display: block">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Delete</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="HideDeleteModal">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @if (HasModalError)
+                    {
+                        <div class="alert alert-danger error-message" role="alert">
+                            @ModalErrorMessage
+                        </div>
+                    }
+                    
+                    <p>Are you sure to delete Company: @DeleteView.Name with Id: @DeleteView.Id</p>
+                    
+                    <input type="submit" class="btn btn-danger" value="Delete" @onclick="DeleteCompany"/>
+                    <input type="button" class="btn" value="Cancel" @onclick="HideDeleteModal"/>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+}
