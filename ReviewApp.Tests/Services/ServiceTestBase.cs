@@ -8,7 +8,7 @@ namespace ReviewApp.Tests.Services
     {
         protected readonly Mock<ReviewContext> DbContextMock = new Mock<ReviewContext>();
 
-        protected Exception TestException()
+        protected static Exception TestException()
         {
             return new Exception("test exception");
         }

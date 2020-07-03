@@ -10,15 +10,15 @@ namespace ReviewApp.Data
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<Review> Reviews { get; set; }
 
-        // public ReviewContext()
-        // {
-        // }
-
         public ReviewContext(DbContextOptions<ReviewContext> dbContext): base(dbContext)
         {
             // db context initialize
         }
-
+        
+        public ReviewContext()
+        {
+        }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasDefaultSchema("review_application");

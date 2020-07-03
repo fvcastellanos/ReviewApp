@@ -82,7 +82,26 @@ namespace ReviewApp.Services
 
         public Either<string, ProductView> Update(ProductView productView)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                var product = _dbContext.Products.Find(productView.Id);
+
+                if (product == null)
+                {
+                    return "product not found";
+                }
+
+                _dbContext.Products.Update(product);
+                _dbContext.SaveChanges();
+
+                return ProductMapper.ToView(product);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("can't update product - ", ex);
+                return "can't update product";
+            }
+            
         }
 
         public Either<string, long> Delete(long id)
