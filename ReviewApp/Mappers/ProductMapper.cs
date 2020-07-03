@@ -20,14 +20,22 @@ namespace ReviewApp.Mappers
 
         public static ProductView ToView(Product product)
         {
-            return new ProductView()
+            var p = new ProductView()
             {
                 Id = product.Id,
                 Name = product.Name,
                 CompanyId = product.CompanyId,
+                CompanyIdValue = product.CompanyId.ToString(),
                 Description = product.Description,
                 ReviewViews = BuildReviewViewList(product.Reviews)
             };
+
+            if (product.Company != null)
+            {
+                p.CompanyName = product.Company.Name;
+            }
+
+            return p;
         }
         
         // ------------------------------------------------------------------------------------

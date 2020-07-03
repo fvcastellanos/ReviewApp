@@ -19,9 +19,15 @@ namespace ReviewApp.Tests.Services
         private CompanyService _companyService;
 
         [SetUp]
-        public void Setup()
+        public void SetUp()
         {
             _companyService = new CompanyService(DbContextMock.Object, new LoggerFactory());
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            DbContextMock.Reset();
         }
 
         [Test]

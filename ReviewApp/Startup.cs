@@ -29,6 +29,7 @@ namespace ReviewApp
             );
 
             services.AddScoped<ICompanyService, CompanyService>();
+            services.AddScoped<IProductService, ProductService>();
             
             services.AddRazorPages();
             services.AddServerSideBlazor();

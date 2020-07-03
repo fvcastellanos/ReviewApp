@@ -60,7 +60,7 @@ namespace ReviewApp.Services
         {
             try
             {
-                var productExists = _dbContext.Products.Exists(product => product.Name.Equals(productView.Name));
+                var productExists = _dbContext.Products.Exists(p => p.Name.Equals(productView.Name));
 
                 if (productExists)
                 {
@@ -106,7 +106,25 @@ namespace ReviewApp.Services
 
         public Either<string, long> Delete(long id)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                var product = _dbContext.Products.Find(id);
+
+                if (product == null)
+                {
+                    return id;
+                }
+
+                _dbContext.Products.Remove(product);
+                _dbContext.SaveChanges();
+
+                return id;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("can't delete product - ", ex);
+                return "can't delete product";
+            }
         }
     }
 }

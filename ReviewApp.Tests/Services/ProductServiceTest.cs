@@ -21,12 +21,18 @@ namespace ReviewApp.Tests.Services
         private static readonly IEnumerable<Product> ProductList = BuildProductList();
         private static readonly IEnumerable<ProductView> ProductViewList = BuildProductViewList();
         private static readonly Product Product = DataFixture.BuildProduct("test");
-        private static readonly ProductView ProductView = ViewFixture.BuildProductView("test");
+        private static readonly ProductView ProductView = BuildProductView();
         
         [SetUp]
-        public void Setup()
+        public void SetUp()
         {
             _productService = new ProductService(DbContextMock.Object, new LoggerFactory());
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            DbContextMock.Reset();
         }
 
         [Test]
@@ -169,9 +175,6 @@ namespace ReviewApp.Tests.Services
         [Test]
         public void TestUpdateProduct()
         {
-            DbContextMock.Setup(context => context.Products)
-                .ReturnsDbSet(ProductList);
-            
             DbContextMock.Setup(context => context.Products.Find(It.IsAny<long>()))
                 .Returns(Product);
 
@@ -181,6 +184,57 @@ namespace ReviewApp.Tests.Services
 
             DbContextMock.Verify(context => context.Products.Find(It.IsAny<long>()));
             DbContextMock.Verify(context => context.Products.Update(It.IsAny<Product>()));
+            DbContextMock.Verify(context => context.SaveChanges());
+        }
+
+        [Test]
+        public void TestDeleteNonExistingProduct()
+        {
+            const long id = 1;
+            
+            DbContextMock.Setup(context => context.Products.Find(It.IsAny<long>()))
+                .Returns(() => null);
+
+            var result = _productService.Delete(id);
+            
+            result.ShouldBeRight(right => right.Should().Be(id));
+            
+            DbContextMock.Verify(context => context.Products.Find(It.IsAny<long>()));
+        }
+
+        [Test]
+        public void TestDeleteThrowsException()
+        {
+            const long id = 1;
+            
+            DbContextMock.Setup(context => context.Products.Find(It.IsAny<long>()))
+                .Returns(Product);
+
+            DbContextMock.Setup(context => context.Products.Remove(It.IsAny<Product>()))
+                .Throws(TestException());
+            
+            var result = _productService.Delete(id);
+            
+            result.ShouldBeLeft(left => left.Should().Be("can't delete product"));
+            
+            DbContextMock.Verify(context => context.Products.Find(It.IsAny<long>()));
+            DbContextMock.Verify(context => context.Products.Remove(It.IsAny<Product>()));
+        }
+
+        [Test]
+        public void TestDeleteProduct()
+        {
+            const long id = 1;
+            
+            DbContextMock.Setup(context => context.Products.Find(It.IsAny<long>()))
+                .Returns(Product);
+
+            var result = _productService.Delete(id);
+            
+            result.ShouldBeRight(right => right.Should().Be(id));
+            
+            DbContextMock.Verify(context => context.Products.Find(It.IsAny<long>()));
+            DbContextMock.Verify(context => context.Products.Remove(It.IsAny<Product>()));
             DbContextMock.Verify(context => context.SaveChanges());
         }
         
@@ -201,6 +255,14 @@ namespace ReviewApp.Tests.Services
             {
                 ViewFixture.BuildProductView("test")
             };
+        }
+
+        private static ProductView BuildProductView()
+        {
+            var view = ViewFixture.BuildProductView("test");
+            view.CompanyName = null;
+
+            return view;
         }
     }
 }

@@ -22,7 +22,8 @@ namespace ReviewApp.Tests.Fixtures
                 Id = 1,
                 Name = name,
                 Description = "Test",
-                CompanyId = 1
+                CompanyId = 1,
+                Company = BuildCompany(name)
             };
         }
 

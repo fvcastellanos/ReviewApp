@@ -25,6 +25,8 @@ namespace ReviewApp.Tests.Fixtures
                 Name = name,
                 Description = "Test",
                 CompanyId = 1,
+                CompanyIdValue = "1",
+                CompanyName = name,
                 ReviewViews = new List<ReviewView>()
             };
         }

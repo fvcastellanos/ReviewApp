@@ -15,10 +15,6 @@ namespace ReviewApp.Data
             // db context initialize
         }
         
-        public ReviewContext()
-        {
-        }
-        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasDefaultSchema("review_application");
