@@ -49,7 +49,15 @@ namespace ReviewApp.Pages
 
         protected void DeleteProduct()
         {
-            
+            var result = ProductService.Delete(DeleteView.Id);
+
+            result.Match(right =>
+            {
+                HideModalError();
+                HideDeleteModal();
+                GetProducts();
+                GetCompanies();
+            }, DisplayModalError);
         }
         
         // ------------------------------------------------------------------------------------
@@ -110,8 +118,18 @@ namespace ReviewApp.Pages
 
         private void UpdateProduct()
         {
+            ProductModel.CompanyId = long.Parse(ProductModel.CompanyIdValue);
+            var result = ProductService.Update(ProductModel);
+
+            result.Match(right =>
+            {
+                HideModal();
+                HideModalError();
+                GetProducts();
+                GetCompanies();
+
+            }, DisplayModalError);
             
         }
-        
     }
 }

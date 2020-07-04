@@ -18,10 +18,11 @@ namespace ReviewApp.Tests.Services
     {
         private IProductService _productService;
 
+        private const string Name = "test";
         private static readonly IEnumerable<Product> ProductList = BuildProductList();
         private static readonly IEnumerable<ProductView> ProductViewList = BuildProductViewList();
-        private static readonly Product Product = DataFixture.BuildProduct("test");
-        private static readonly ProductView ProductView = BuildProductView();
+        private static readonly Product Product = DataFixture.BuildProduct(Name);
+        private static readonly ProductView ProductView = ViewFixture.BuildProductView(Name);
         
         [SetUp]
         public void SetUp()
@@ -139,7 +140,7 @@ namespace ReviewApp.Tests.Services
 
             var result = _productService.Add(ProductView);
             
-            result.ShouldBeRight(right => right.Should().BeEquivalentTo(ProductView));
+            result.ShouldBeRight(right => right.Should().BeOfType<ProductView>());
             
             DbContextMock.Verify(context => context.Products);
             DbContextMock.Verify(context => context.Products.Add(It.IsAny<Product>()));
@@ -255,14 +256,6 @@ namespace ReviewApp.Tests.Services
             {
                 ViewFixture.BuildProductView("test")
             };
-        }
-
-        private static ProductView BuildProductView()
-        {
-            var view = ViewFixture.BuildProductView("test");
-            view.CompanyName = null;
-
-            return view;
         }
     }
 }

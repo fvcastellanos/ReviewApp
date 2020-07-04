@@ -18,9 +18,12 @@ namespace ReviewApp.Tests.Mappers
         [Test]
         public void ConvertToModel()
         {
+            var product = DataFixture.BuildProduct(Name);
+            product.Company = null;
+            
             var model = ProductMapper.ToModel(ProductView);
 
-            model.Should().BeEquivalentTo(Product);
+            model.Should().BeEquivalentTo(product);
         }
 
         [Test]

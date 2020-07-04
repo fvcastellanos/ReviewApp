@@ -91,6 +91,10 @@ namespace ReviewApp.Services
                     return "product not found";
                 }
 
+                product.Name = productView.Name;
+                product.Description = productView.Description;
+                product.CompanyId = productView.CompanyId;
+                
                 _dbContext.Products.Update(product);
                 _dbContext.SaveChanges();
 
