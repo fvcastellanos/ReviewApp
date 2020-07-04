@@ -55,6 +55,33 @@ namespace ReviewApp.Data
             modelBuilder.Entity<Review>()
                 .HasIndex(p => p.ReviewDate)
                 .HasName("idx_review_date");
+
+            modelBuilder.Entity<Review>()
+                .HasIndex(p => p.Starts)
+                .HasName("idx_review_starts");
+
+            modelBuilder.Entity<Review>()
+                .HasIndex(p => p.Title)
+                .HasName("idx_review_title");
+            
+            // TextAnalysis
+            
+            modelBuilder.Entity<TextAnalysis>()
+                .HasOne(p => p.Review)
+                .WithMany(p => p.TextAnalysis)
+                .HasForeignKey(p => p.ReviewId);
+
+            modelBuilder.Entity<TextAnalysis>()
+                .Property(p => p.QueryDate)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            modelBuilder.Entity<TextAnalysis>()
+                .HasIndex(p => p.Sentiment)
+                .HasName("idx_text_analysis_sentiment");
+            
+            modelBuilder.Entity<TextAnalysis>()
+                .HasIndex(p => p.QueryDate)
+                .HasName("idx_text_analysis_query_date");
         }
     }
 }

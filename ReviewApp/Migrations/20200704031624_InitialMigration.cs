@@ -18,8 +18,8 @@ namespace ReviewApp.Migrations
                 {
                     Id = table.Column<long>(nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    name = table.Column<string>(nullable: false),
-                    description = table.Column<string>(nullable: true)
+                    name = table.Column<string>(type: "varchar(150)", nullable: false),
+                    description = table.Column<string>(type: "varchar(250)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -33,9 +33,10 @@ namespace ReviewApp.Migrations
                 {
                     Id = table.Column<long>(nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    name = table.Column<string>(nullable: false),
-                    description = table.Column<string>(nullable: true),
-                    company_id = table.Column<long>(nullable: false)
+                    name = table.Column<string>(type: "varchar(150)", nullable: false),
+                    description = table.Column<string>(type: "varchar(250)", nullable: true),
+                    company_id = table.Column<long>(nullable: false),
+                    image_url = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -56,8 +57,10 @@ namespace ReviewApp.Migrations
                 {
                     Id = table.Column<long>(nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    review_date = table.Column<DateTime>(nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
-                    content = table.Column<string>(nullable: false),
+                    review_date = table.Column<DateTime>(type: "timestamp", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    starts = table.Column<int>(type: "int", nullable: false),
+                    title = table.Column<string>(type: "varchar(150)", nullable: false),
+                    content = table.Column<string>(type: "text", nullable: false),
                     product_id = table.Column<long>(nullable: false)
                 },
                 constraints: table =>
@@ -68,6 +71,33 @@ namespace ReviewApp.Migrations
                         column: x => x.product_id,
                         principalSchema: "review_application",
                         principalTable: "product",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "text_analysis",
+                schema: "review_application",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    review_id = table.Column<long>(nullable: false),
+                    query_date = table.Column<DateTime>(type: "timestamp", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    json = table.Column<string>(type: "text", nullable: true),
+                    sentiment = table.Column<string>(type: "varchar(50)", nullable: true),
+                    positive_score = table.Column<double>(nullable: false),
+                    neutral_score = table.Column<double>(nullable: false),
+                    negative_score = table.Column<double>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_text_analysis", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_text_analysis_review_review_id",
+                        column: x => x.review_id,
+                        principalSchema: "review_application",
+                        principalTable: "review",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -103,10 +133,44 @@ namespace ReviewApp.Migrations
                 schema: "review_application",
                 table: "review",
                 column: "review_date");
+
+            migrationBuilder.CreateIndex(
+                name: "idx_review_starts",
+                schema: "review_application",
+                table: "review",
+                column: "starts");
+
+            migrationBuilder.CreateIndex(
+                name: "idx_review_title",
+                schema: "review_application",
+                table: "review",
+                column: "title");
+
+            migrationBuilder.CreateIndex(
+                name: "idx_text_analysis_query_date",
+                schema: "review_application",
+                table: "text_analysis",
+                column: "query_date");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_text_analysis_review_id",
+                schema: "review_application",
+                table: "text_analysis",
+                column: "review_id");
+
+            migrationBuilder.CreateIndex(
+                name: "idx_text_analysis_sentiment",
+                schema: "review_application",
+                table: "text_analysis",
+                column: "sentiment");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "text_analysis",
+                schema: "review_application");
+
             migrationBuilder.DropTable(
                 name: "review",
                 schema: "review_application");

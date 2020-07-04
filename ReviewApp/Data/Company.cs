@@ -12,12 +12,12 @@ namespace ReviewApp.Data
         public long Id { get; set; }
 
         [Required]
-        [Column("name")]
+        [Column("name", TypeName = "varchar(150)")]
         public string Name { get; set; }
 
-        [Column("description")]
+        [Column("description", TypeName = "varchar(250)")]
         public string Description { get; set; }
 
-        public List<Product> Products { get; } = new List<Product>();
+        public IEnumerable<Product> Products { get; } = new List<Product>();
     }
 }
