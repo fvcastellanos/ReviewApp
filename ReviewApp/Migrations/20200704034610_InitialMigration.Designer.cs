@@ -9,7 +9,7 @@ using ReviewApp.Data;
 namespace ReviewApp.Migrations
 {
     [DbContext(typeof(ReviewContext))]
-    [Migration("20200704031624_InitialMigration")]
+    [Migration("20200704034610_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -99,8 +99,8 @@ namespace ReviewApp.Migrations
                         .HasColumnType("timestamp")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.Property<int>("Starts")
-                        .HasColumnName("starts")
+                    b.Property<int>("Stars")
+                        .HasColumnName("stars")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -115,7 +115,7 @@ namespace ReviewApp.Migrations
                     b.HasIndex("ReviewDate")
                         .HasName("idx_review_date");
 
-                    b.HasIndex("Starts")
+                    b.HasIndex("Stars")
                         .HasName("idx_review_starts");
 
                     b.HasIndex("Title")
@@ -194,7 +194,7 @@ namespace ReviewApp.Migrations
             modelBuilder.Entity("ReviewApp.Data.TextAnalysis", b =>
                 {
                     b.HasOne("ReviewApp.Data.Review", "Review")
-                        .WithMany("TextAnalysis")
+                        .WithMany("TextAnalyses")
                         .HasForeignKey("ReviewId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

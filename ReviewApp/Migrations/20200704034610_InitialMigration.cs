@@ -58,7 +58,7 @@ namespace ReviewApp.Migrations
                     Id = table.Column<long>(nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     review_date = table.Column<DateTime>(type: "timestamp", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
-                    starts = table.Column<int>(type: "int", nullable: false),
+                    stars = table.Column<int>(type: "int", nullable: false),
                     title = table.Column<string>(type: "varchar(150)", nullable: false),
                     content = table.Column<string>(type: "text", nullable: false),
                     product_id = table.Column<long>(nullable: false)
@@ -138,7 +138,7 @@ namespace ReviewApp.Migrations
                 name: "idx_review_starts",
                 schema: "review_application",
                 table: "review",
-                column: "starts");
+                column: "stars");
 
             migrationBuilder.CreateIndex(
                 name: "idx_review_title",

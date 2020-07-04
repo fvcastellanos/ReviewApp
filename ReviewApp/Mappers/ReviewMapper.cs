@@ -14,6 +14,8 @@ namespace ReviewApp.Mappers
                 ReviewDate = reviewView.ReviewDate,
                 Content = reviewView.Content,
                 ProductId = reviewView.ProductId,
+                Title =  reviewView.Title,
+                Stars =  reviewView.Stars
             };
         }
 
@@ -23,6 +25,8 @@ namespace ReviewApp.Mappers
             {
                 Id = review.Id,
                 ReviewDate = review.ReviewDate,
+                Title = review.Title,
+                Stars = review.Stars,
                 Content = review.Content,
                 ProductId = review.ProductId,
             };

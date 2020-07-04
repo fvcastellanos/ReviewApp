@@ -15,6 +15,10 @@ namespace ReviewApp.Domain.Views
         [Required]
         [MaxLength(250)]
         public string Content { get; set; }
+        
+        [Required]
+        [Range(1, 5)]
+        public int Stars { get; set; }
         public long ProductId { get; set; }
         
     }

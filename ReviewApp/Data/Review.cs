@@ -17,8 +17,8 @@ namespace ReviewApp.Data
         public DateTime ReviewDate { get; set; }
 
         [Required]
-        [Column("starts", TypeName = "int")]
-        public int Starts { get; set; }
+        [Column("stars", TypeName = "int")]
+        public int Stars { get; set; }
         
         [Required]
         [Column("title", TypeName = "varchar(150)")]
@@ -33,6 +33,6 @@ namespace ReviewApp.Data
         
         public Product Product { get; set; }
 
-        public IEnumerable<TextAnalysis> TextAnalysis { get; } = new List<TextAnalysis>();
+        public IEnumerable<TextAnalysis> TextAnalyses { get; } = new List<TextAnalysis>();
     }
 }

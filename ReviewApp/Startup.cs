@@ -1,9 +1,12 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using ReviewApp.Cognitive.Client;
 using ReviewApp.Data;
 using ReviewApp.Services;
 
@@ -28,8 +31,18 @@ namespace ReviewApp
                 options.UseMySQL("server=localhost;database=review_application;user=root;password=r00t")
             );
 
+            services.AddSingleton<ITextAnalysisClient>(service =>
+            {
+                var key = Environment.GetEnvironmentVariable("AZURE_KEY_CREDENTIAL") ?? "";
+                var url = Environment.GetEnvironmentVariable("AZURE_SERVICE_URL") ?? "";
+                var loggerFactory = service.GetService<ILoggerFactory>();
+                
+                return new TextAnalysisClient(key, url, loggerFactory);
+            });
+            
             services.AddScoped<ICompanyService, CompanyService>();
             services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IReviewService, ReviewService>();
             
             services.AddRazorPages();
             services.AddServerSideBlazor();

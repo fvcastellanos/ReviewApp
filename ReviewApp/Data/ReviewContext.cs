@@ -9,6 +9,8 @@ namespace ReviewApp.Data
         public virtual DbSet<Company> Companies { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<Review> Reviews { get; set; }
+        
+        public virtual DbSet<TextAnalysis> TextAnalyses { get; set; }
 
         public ReviewContext(DbContextOptions<ReviewContext> dbContext): base(dbContext)
         {
@@ -57,7 +59,7 @@ namespace ReviewApp.Data
                 .HasName("idx_review_date");
 
             modelBuilder.Entity<Review>()
-                .HasIndex(p => p.Starts)
+                .HasIndex(p => p.Stars)
                 .HasName("idx_review_starts");
 
             modelBuilder.Entity<Review>()
@@ -68,7 +70,7 @@ namespace ReviewApp.Data
             
             modelBuilder.Entity<TextAnalysis>()
                 .HasOne(p => p.Review)
-                .WithMany(p => p.TextAnalysis)
+                .WithMany(p => p.TextAnalyses)
                 .HasForeignKey(p => p.ReviewId);
 
             modelBuilder.Entity<TextAnalysis>()

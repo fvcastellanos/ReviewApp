@@ -1,9 +1,12 @@
 ﻿@page "/products/{Id:long}/reviews"
+@using ReviewApp.Domain.Views
 @inherits ReviewBase
 
 <h1>Product Reviews</h1>
 
-<a href="/products">Return to Products</a>
+<NavLink href="products">
+    Return to Products
+</NavLink>
 
 <div class="card card-parent">
     <div class="card-header">
@@ -17,32 +20,80 @@
 
 <h3>Reviews</h3>
 
+<button class="btn btn-primary add-button" @onclick="ShowAddModal">Add Reviews</button>
+
+@if (HasError)
+{
+    <div class="alert alert-danger error-message" role="alert">
+        @ErrorMessage
+    </div>    
+}
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
             
-            <!-- Flexbox container for aligning the toasts -->
-            <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center" style="min-height: 200px;">
-                
             @foreach (var review in Reviews)
             {
-                <!-- Then put toasts within -->
-                <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-                    <div class="toast-header">
-                        <img src="..." class="rounded mr-2" alt="...">
-                        <strong class="mr-auto">Bootstrap</strong>
-                        <small>@review.ReviewDate.ToShortDateString()</small>
-                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                <div class="card card-review">
+                    <div class="card-header">
+                        <strong>@review.Title</strong>
                     </div>
-                    <div class="toast-body">
-                        @review.Content
+                    <div class="card-body">
+                        <p class="card-text">@review.Content</p>
+                        <!--a href="#" class="btn btn-primary">Go somewhere</a -->
+                    </div>
+                    <div class="card-footer">
+                        <p class="card-text">
+                            <button class="btn-sm btn-danger" @onclick="() => DeleteReview(review.Id)"><span class="oi oi-delete" aria-hidden="true"></span></button>
+                            <small> - Stars: @review.Stars Posted on: @review.ReviewDate</small>
+                        </p>
                     </div>
                 </div>
             }
             
-            </div>
         </div>
     </div>
 </div>
+
+@if (DisplayModal)
+{
+    <div class="modal" tabindex="-1" role="dialog" style="display: block">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Review</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="HideModal">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @if (HasModalError)
+                    {
+                        <div class="alert alert-danger error-message" role="alert">
+                            @ModalErrorMessage
+                        </div>
+                    }
+                    <EditForm Model="@ReviewModel" OnValidSubmit="SaveChanges">
+                        <DataAnnotationsValidator/>
+                        <ValidationSummary/>
+                        <div class="form-group">
+                            <label for="title">Title</label>
+                            <input type="text" class="form-control" id="title" placeholder="Review Title" @bind="ReviewModel.Title"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="stars">Stars</label>
+                            <input type="number" class="form-control" id="stars" placeholder="Stars" @bind="ReviewModel.Stars"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="content">Content</label>
+                            <textarea class="form-control" id="content" @bind="ReviewModel.Content" row="4"></textarea>
+                        </div>
+                        <input type="submit" class="btn btn-primary" value="Save"/>
+                        <input type="button" class="btn" value="Cancel" @onclick="HideModal"/>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>    
+}
