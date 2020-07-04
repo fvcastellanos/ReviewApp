@@ -9,6 +9,8 @@ namespace ReviewApp.Data
         public virtual DbSet<Company> Companies { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<Review> Reviews { get; set; }
+        
+        public virtual DbSet<TextAnalysis> TextAnalyses { get; set; }
 
         public ReviewContext(DbContextOptions<ReviewContext> dbContext): base(dbContext)
         {
@@ -55,6 +57,33 @@ namespace ReviewApp.Data
             modelBuilder.Entity<Review>()
                 .HasIndex(p => p.ReviewDate)
                 .HasName("idx_review_date");
+
+            modelBuilder.Entity<Review>()
+                .HasIndex(p => p.Stars)
+                .HasName("idx_review_starts");
+
+            modelBuilder.Entity<Review>()
+                .HasIndex(p => p.Title)
+                .HasName("idx_review_title");
+            
+            // TextAnalysis
+            
+            modelBuilder.Entity<TextAnalysis>()
+                .HasOne(p => p.Review)
+                .WithMany(p => p.TextAnalyses)
+                .HasForeignKey(p => p.ReviewId);
+
+            modelBuilder.Entity<TextAnalysis>()
+                .Property(p => p.QueryDate)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            modelBuilder.Entity<TextAnalysis>()
+                .HasIndex(p => p.Sentiment)
+                .HasName("idx_text_analysis_sentiment");
+            
+            modelBuilder.Entity<TextAnalysis>()
+                .HasIndex(p => p.QueryDate)
+                .HasName("idx_text_analysis_query_date");
         }
     }
 }

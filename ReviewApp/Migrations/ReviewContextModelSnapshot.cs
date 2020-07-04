@@ -26,12 +26,12 @@ namespace ReviewApp.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnName("description")
-                        .HasColumnType("text");
+                        .HasColumnType("varchar(250)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnName("name")
-                        .HasColumnType("varchar(767)");
+                        .HasColumnType("varchar(150)");
 
                     b.HasKey("Id");
 
@@ -54,12 +54,16 @@ namespace ReviewApp.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnName("description")
+                        .HasColumnType("varchar(250)");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnName("image_url")
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnName("name")
-                        .HasColumnType("varchar(767)");
+                        .HasColumnType("varchar(150)");
 
                     b.HasKey("Id");
 
@@ -90,8 +94,17 @@ namespace ReviewApp.Migrations
                     b.Property<DateTime>("ReviewDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnName("review_date")
-                        .HasColumnType("datetime")
+                        .HasColumnType("timestamp")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<int>("Stars")
+                        .HasColumnName("stars")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnName("title")
+                        .HasColumnType("varchar(150)");
 
                     b.HasKey("Id");
 
@@ -100,7 +113,62 @@ namespace ReviewApp.Migrations
                     b.HasIndex("ReviewDate")
                         .HasName("idx_review_date");
 
+                    b.HasIndex("Stars")
+                        .HasName("idx_review_starts");
+
+                    b.HasIndex("Title")
+                        .HasName("idx_review_title");
+
                     b.ToTable("review");
+                });
+
+            modelBuilder.Entity("ReviewApp.Data.TextAnalysis", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Json")
+                        .HasColumnName("json")
+                        .HasColumnType("text");
+
+                    b.Property<double>("NegativeScore")
+                        .HasColumnName("negative_score")
+                        .HasColumnType("double");
+
+                    b.Property<double>("NeutralScore")
+                        .HasColumnName("neutral_score")
+                        .HasColumnType("double");
+
+                    b.Property<double>("PositiveScore")
+                        .HasColumnName("positive_score")
+                        .HasColumnType("double");
+
+                    b.Property<DateTime>("QueryDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("query_date")
+                        .HasColumnType("timestamp")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<long>("ReviewId")
+                        .HasColumnName("review_id")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Sentiment")
+                        .HasColumnName("sentiment")
+                        .HasColumnType("varchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QueryDate")
+                        .HasName("idx_text_analysis_query_date");
+
+                    b.HasIndex("ReviewId");
+
+                    b.HasIndex("Sentiment")
+                        .HasName("idx_text_analysis_sentiment");
+
+                    b.ToTable("text_analysis");
                 });
 
             modelBuilder.Entity("ReviewApp.Data.Product", b =>
@@ -117,6 +185,15 @@ namespace ReviewApp.Migrations
                     b.HasOne("ReviewApp.Data.Product", "Product")
                         .WithMany("Reviews")
                         .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ReviewApp.Data.TextAnalysis", b =>
+                {
+                    b.HasOne("ReviewApp.Data.Review", "Review")
+                        .WithMany("TextAnalyses")
+                        .HasForeignKey("ReviewId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
