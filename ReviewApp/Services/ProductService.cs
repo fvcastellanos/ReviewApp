@@ -94,6 +94,7 @@ namespace ReviewApp.Services
                 product.Name = productView.Name;
                 product.Description = productView.Description;
                 product.CompanyId = productView.CompanyId;
+                product.ImageUrl = productView.ImageUrl;
                 
                 _dbContext.Products.Update(product);
                 _dbContext.SaveChanges();

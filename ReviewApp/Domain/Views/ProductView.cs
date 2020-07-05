@@ -22,6 +22,8 @@ namespace ReviewApp.Domain.Views
         public string CompanyIdValue { get; set; }
         
         public string CompanyName { get; set; }
+        
+        public string ImageUrl { get; set; }
         public List<ReviewView> ReviewViews { get; set; }
     }
 }

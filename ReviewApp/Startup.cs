@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using ReviewApp.Cognitive.Client;
 using ReviewApp.Data;
 using ReviewApp.Services;
+using ReviewApp.Storage.Client;
 
 namespace ReviewApp
 {
@@ -40,6 +41,17 @@ namespace ReviewApp
                 var loggerFactory = service.GetService<ILoggerFactory>();
                 
                 return new TextAnalysisClient(key, url, loggerFactory);
+            });
+
+            services.AddSingleton(service =>
+            {
+                var awsAccessKey = Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID") ?? "";
+                var awsSecret = Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY") ?? "";
+                var spacesBasePath = Environment.GetEnvironmentVariable("SPACES_BASE_PATH") ?? "";
+                var spacesBucket = Environment.GetEnvironmentVariable("SPACES_BUCKET") ?? "";
+                var spacesUrl = Environment.GetEnvironmentVariable("SPACES_URL") ?? "";                
+
+                return new SpacesClient(awsAccessKey, awsSecret, spacesBasePath, spacesBucket, spacesUrl);
             });
 
             services.AddScoped<ITextAnalysisService, TextAnalysisService>();

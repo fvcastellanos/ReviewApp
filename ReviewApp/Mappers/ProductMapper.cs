@@ -14,7 +14,8 @@ namespace ReviewApp.Mappers
                 Id = productView.Id,
                 Name = productView.Name,
                 Description = productView.Description,
-                CompanyId = productView.CompanyId
+                CompanyId = productView.CompanyId,
+                ImageUrl = productView.ImageUrl
             };
         }
 
@@ -27,7 +28,8 @@ namespace ReviewApp.Mappers
                 CompanyId = product.CompanyId,
                 CompanyIdValue = product.CompanyId.ToString(),
                 Description = product.Description,
-                ReviewViews = BuildReviewViewList(product.Reviews)
+                ReviewViews = BuildReviewViewList(product.Reviews),
+                ImageUrl = product.ImageUrl
             };
 
             if (product.Company != null)
