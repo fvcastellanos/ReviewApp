@@ -18,9 +18,11 @@ namespace ReviewApp.Tests.Mappers
         [Test]
         public void ConvertToModel()
         {
+            var review = DataFixture.BuildReview(Name);
+            review.TextAnalysis = null;
             var model = ReviewMapper.ToModel(ReviewView);
 
-            model.Should().BeEquivalentTo(Review);
+            model.Should().BeEquivalentTo(review);
         }
 
         [Test]

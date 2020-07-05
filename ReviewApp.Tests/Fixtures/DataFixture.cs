@@ -34,7 +34,8 @@ namespace ReviewApp.Tests.Fixtures
                 Id = 1,
                 Content = "Test",
                 ReviewDate = DateTime.MinValue,
-                ProductId = 1
+                ProductId = 1,
+                TextAnalysis = new TextAnalysis()
             };
         }
     }
