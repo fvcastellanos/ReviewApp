@@ -39,7 +39,7 @@
                             <td>
                                 <button class="btn btn-primary" @onclick="() => GetProduct(product.Id)" ><span class="oi oi-brush" aria-hidden="true"></span></button>
                                 <button class="btn btn-danger" @onclick="() => GetDeleteInformation(product.Id, product.Name)"><span class="oi oi-delete" aria-hidden="true"></span></button>
-                                <a class="btn btn-warning" href="/products/@product.Id/reviews"><span class="oi oi-chat" aria-hidden="true"></span></a>
+                                <a class="btn btn-warning" href="products/@product.Id/reviews"><span class="oi oi-chat" aria-hidden="true"></span></a>
                             </td>
                         </tr>
                     }
