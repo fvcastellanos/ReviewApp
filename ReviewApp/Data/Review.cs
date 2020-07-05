@@ -32,7 +32,8 @@ namespace ReviewApp.Data
         public long ProductId { get; set; }
         
         public Product Product { get; set; }
+        
+        public TextAnalysis TextAnalysis { get; set; }
 
-        public IEnumerable<TextAnalysis> TextAnalyses { get; } = new List<TextAnalysis>();
     }
 }

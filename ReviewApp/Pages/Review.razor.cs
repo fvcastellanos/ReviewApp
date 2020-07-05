@@ -15,15 +15,20 @@ namespace ReviewApp.Pages
         
         [Inject]
         protected IReviewService ReviewService { get; set; }
+        
+        [Inject]
+        protected ITextAnalysisService TextAnalysisService { get; set; }
 
         protected ProductView ProductModel;
         protected IEnumerable<ReviewView> Reviews = new List<ReviewView>();
         protected ReviewView ReviewModel;
+        protected IEnumerable<ProductAcceptanceView> ProductAcceptanceModel;
 
         protected override void OnInitialized()
         {
             GetProduct(Id);
             GetReviews(Id);
+            GetProductAcceptance(Id);
         }
 
         protected void ShowAddModal()
@@ -52,6 +57,7 @@ namespace ReviewApp.Pages
                 HideModalError();
                 GetProduct(Id);
                 GetReviews(Id);
+                GetProductAcceptance(Id);
             }, DisplayError);
         }
         
@@ -91,6 +97,7 @@ namespace ReviewApp.Pages
         private void AddReview()
         {
             ReviewModel.ProductId = Id;
+            ReviewModel.Stars = 1; // Set to one
             var result = ReviewService.Add(ReviewModel);
 
             result.Match(right =>
@@ -99,6 +106,7 @@ namespace ReviewApp.Pages
                 HideModalError();
                 GetProduct(Id);
                 GetReviews(Id);
+                GetProductAcceptance(Id);
             }, DisplayModalError);
         }
 
@@ -113,6 +121,12 @@ namespace ReviewApp.Pages
                 GetProduct(Id);
                 GetReviews(Id);
             }, DisplayModalError);
+        }
+
+        private void GetProductAcceptance(long productId)
+        {
+            ProductAcceptanceModel = new List<ProductAcceptanceView>();
+            ProductAcceptanceModel = TextAnalysisService.GroupBySentiment(productId);
         }
     }
 }

@@ -51,6 +51,11 @@ namespace ReviewApp.Data
                 .HasForeignKey(p => p.ProductId);
 
             modelBuilder.Entity<Review>()
+                .HasOne<TextAnalysis>(p => p.TextAnalysis)
+                .WithOne(p => p.Review)
+                .HasForeignKey<TextAnalysis>(p => p.ReviewId);
+
+            modelBuilder.Entity<Review>()
                 .Property(p => p.ReviewDate)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
@@ -68,10 +73,10 @@ namespace ReviewApp.Data
             
             // TextAnalysis
             
-            modelBuilder.Entity<TextAnalysis>()
-                .HasOne(p => p.Review)
-                .WithMany(p => p.TextAnalyses)
-                .HasForeignKey(p => p.ReviewId);
+            // modelBuilder.Entity<TextAnalysis>()
+            //     .HasOne(p => p.Review)
+            //     .WithMany(p => p.TextAnalyses)
+            //     .HasForeignKey(p => p.ReviewId);
 
             modelBuilder.Entity<TextAnalysis>()
                 .Property(p => p.QueryDate)

@@ -9,10 +9,7 @@ namespace ReviewApp.Cognitive.Client
     public class TextAnalysisClient: ITextAnalysisClient
     {
         private readonly ILogger<TextAnalysisClient> _logger;
-
         private readonly TextAnalyticsClient _textAnalyticsClient;
-        // private static readonly AzureKeyCredential Credentials = GetAzureKeyCredential();
-        // private static readonly Uri EndPoint = GetAzureServiceUri();
 
         public TextAnalysisClient(string azureKeyCredential, string azureServiceUrl, ILoggerFactory loggerFactory)
         {
@@ -58,17 +55,5 @@ namespace ReviewApp.Cognitive.Client
                 return Option<DocumentSentiment>.None;
             }
         }
-
-        /*
-        private static AzureKeyCredential GetAzureKeyCredential()
-        {
-            return new AzureKeyCredential(Environment.GetEnvironmentVariable("AZURE_KEY_CREDENTIAL") ?? "");
-        }
-
-        private static Uri GetAzureServiceUri()
-        {
-            return new Uri(Environment.GetEnvironmentVariable("AZURE_SERVICE_URL") ?? "");
-        }
-    */
     }
 }

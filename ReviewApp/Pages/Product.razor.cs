@@ -1,7 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using BlazorInputFile;
 using Microsoft.AspNetCore.Components;
+using ReviewApp.Domain.Upload;
 using ReviewApp.Domain.Views;
 using ReviewApp.Services;
+using ReviewApp.Storage.Client;
 
 namespace ReviewApp.Pages
 {
@@ -12,10 +18,14 @@ namespace ReviewApp.Pages
         
         [Inject]
         protected ICompanyService CompanyService { get; set; }
+        
+        [Inject]
+        protected SpacesClient SpacesClient { get; set; }
 
         protected IEnumerable<CompanyView> Companies;
         protected IEnumerable<ProductView> Products;
         protected ProductView ProductModel;
+        protected FileUpload UploadedFile;
         
         protected override void OnInitialized()
         {
@@ -27,6 +37,7 @@ namespace ReviewApp.Pages
         {
             ShowModal();
             ProductModel = new ProductView();
+            UploadedFile = null;
         }
 
         protected void GetProduct(long id)
@@ -38,6 +49,8 @@ namespace ReviewApp.Pages
 
         protected void SaveChanges()
         {
+            SaveUploadedFile();
+            
             if (ModifyModal)
             {
                 UpdateProduct();
@@ -58,6 +71,24 @@ namespace ReviewApp.Pages
                 GetProducts();
                 GetCompanies();
             }, DisplayModalError);
+        }
+
+        protected async Task HandleSelectedFile(IFileListEntry[] files)
+        {
+            var file = files.FirstOrDefault();
+
+            if (file != null)
+            {
+                var ms = new MemoryStream();
+                await file.Data.CopyToAsync(ms);
+                
+                UploadedFile = new FileUpload()
+                {
+                    Name = file.Name,
+                    Type = file.Type,
+                    Data = ms.ToArray()
+                };
+            }
         }
         
         // ------------------------------------------------------------------------------------
@@ -98,6 +129,7 @@ namespace ReviewApp.Pages
         {
             ShowModal();
             ModifyModal = true;
+            UploadedFile = null;
             ProductModel = productView;
         }
 
@@ -130,6 +162,20 @@ namespace ReviewApp.Pages
 
             }, DisplayModalError);
             
+        }
+
+        private void SaveUploadedFile()
+        {
+            if (UploadedFile != null)
+            {
+                var ms = new MemoryStream(UploadedFile.Data);
+                var url = SpacesClient.PutObject(ms, UploadedFile.Type, UploadedFile.Name);
+
+                if (!string.IsNullOrEmpty(url))
+                {
+                    ProductModel.ImageUrl = url;
+                }
+            }
         }
     }
 }

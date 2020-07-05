@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using LanguageExt;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using ReviewApp.Data;
 using ReviewApp.Domain.Views;
@@ -14,17 +15,22 @@ namespace ReviewApp.Services
         private readonly ILogger<ReviewService> _logger;
         private readonly ReviewContext _dbContext;
 
-        public ReviewService(ReviewContext dbContext, ILoggerFactory loggerFactory)
+        private readonly ITextAnalysisService _textAnalysisService;
+
+        public ReviewService(ReviewContext dbContext, ITextAnalysisService textAnalysisService, ILoggerFactory loggerFactory)
         {
             _logger = loggerFactory.CreateLogger<ReviewService>();
             _dbContext = dbContext;
+            _textAnalysisService = textAnalysisService;
         }
         
         public Either<string, IEnumerable<ReviewView>> GetProductReviews(long productId)
         {
             try
             {
-                var reviews = _dbContext.Reviews.Filter(review => review.ProductId == productId)
+                var reviews = _dbContext.Reviews
+                    .Include(review => review.TextAnalysis)
+                    .Filter(review => review.ProductId == productId)
                     .OrderByDescending(review => review.Id)
                     .ToList();
 
@@ -61,6 +67,8 @@ namespace ReviewApp.Services
 
                 _dbContext.Reviews.Add(review);
                 _dbContext.SaveChanges();
+
+                _textAnalysisService.SaveContentAnalysis(review.Content, review.Id);
 
                 return ReviewMapper.ToView(review);
             }

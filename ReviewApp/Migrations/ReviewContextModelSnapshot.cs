@@ -128,9 +128,13 @@ namespace ReviewApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    b.Property<string>("Json")
-                        .HasColumnName("json")
-                        .HasColumnType("text");
+                    b.Property<string>("Language")
+                        .HasColumnName("language")
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<double>("LanguageScore")
+                        .HasColumnName("language_score")
+                        .HasColumnType("double");
 
                     b.Property<double>("NegativeScore")
                         .HasColumnName("negative_score")
@@ -163,7 +167,8 @@ namespace ReviewApp.Migrations
                     b.HasIndex("QueryDate")
                         .HasName("idx_text_analysis_query_date");
 
-                    b.HasIndex("ReviewId");
+                    b.HasIndex("ReviewId")
+                        .IsUnique();
 
                     b.HasIndex("Sentiment")
                         .HasName("idx_text_analysis_sentiment");
@@ -192,8 +197,8 @@ namespace ReviewApp.Migrations
             modelBuilder.Entity("ReviewApp.Data.TextAnalysis", b =>
                 {
                     b.HasOne("ReviewApp.Data.Review", "Review")
-                        .WithMany("TextAnalyses")
-                        .HasForeignKey("ReviewId")
+                        .WithOne("TextAnalysis")
+                        .HasForeignKey("ReviewApp.Data.TextAnalysis", "ReviewId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
