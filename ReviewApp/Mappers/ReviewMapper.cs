@@ -29,6 +29,8 @@ namespace ReviewApp.Mappers
                 Stars = review.Stars,
                 Content = review.Content,
                 ProductId = review.ProductId,
+                Sentiment = review.TextAnalysis.Sentiment,
+                Language = review.TextAnalysis.Language
             };
         }
     }

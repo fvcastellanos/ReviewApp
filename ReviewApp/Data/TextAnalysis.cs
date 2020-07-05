@@ -19,8 +19,11 @@ namespace ReviewApp.Data
         [Column("query_date", TypeName = "timestamp")]
         public DateTime QueryDate { get; set; }
         
-        [Column("json", TypeName = "text")]
-        public string Json { get; set; }
+        [Column("language", TypeName = "varchar(50)")]
+        public string Language { get; set; }
+        
+        [Column("language_score")]
+        public double LanguageScore { get; set; }
         
         [Column("sentiment", TypeName = "varchar(50)")]
         public string Sentiment { get; set; }

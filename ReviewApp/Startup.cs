@@ -27,9 +27,11 @@ namespace ReviewApp
         {
 
             services.AddDbContextPool<ReviewContext>(options =>
-
-                options.UseMySQL("server=localhost;database=review_application;user=root;password=r00t")
-            );
+            {
+                var connectionString = Environment.GetEnvironmentVariable("REVIEW_APP_CONNECTION_STRING") ?? 
+                                       "server=localhost;database=review_application;user=root;password=r00t";
+                options.UseMySQL(connectionString);
+            });
 
             services.AddSingleton<ITextAnalysisClient>(service =>
             {
@@ -39,14 +41,14 @@ namespace ReviewApp
                 
                 return new TextAnalysisClient(key, url, loggerFactory);
             });
-            
+
+            services.AddScoped<ITextAnalysisService, TextAnalysisService>();
             services.AddScoped<ICompanyService, CompanyService>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IReviewService, ReviewService>();
             
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<WeatherForecastService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

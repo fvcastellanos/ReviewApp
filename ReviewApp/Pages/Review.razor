@@ -1,20 +1,37 @@
 ﻿@page "/products/{Id:long}/reviews"
-@using ReviewApp.Domain.Views
 @inherits ReviewBase
 
 <h1>Product Reviews</h1>
 
-<NavLink href="products">
-    Return to Products
-</NavLink>
-
 <div class="card card-parent">
     <div class="card-header">
-        @ProductModel.CompanyName
+        <strong>@ProductModel.CompanyName</strong>
     </div>
     <div class="card-body">
-        <h5 class="card-title">@ProductModel.Name</h5>
-        <p class="card-text">@ProductModel.Description</p>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-2">
+                    <div class="text-center">
+                      <img src="..." class="rounded" alt="...">
+                    </div>                    
+                </div>
+                <div class="col-8">
+                    <h5 class="card-title">@ProductModel.Name</h5>
+                    <p class="card-text">@ProductModel.Description</p>
+                </div>
+                <div class="col-2">
+                    <ul class="list-group">
+                        @foreach (var acceptance in ProductAcceptanceModel)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                @acceptance.Sentiment
+                                <span class="badge badge-primary badge-pill">@acceptance.Count</span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -40,13 +57,23 @@
                         <strong>@review.Title</strong>
                     </div>
                     <div class="card-body">
-                        <p class="card-text">@review.Content</p>
-                        <!--a href="#" class="btn btn-primary">Go somewhere</a -->
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-11">
+                                    <small>
+                                        <p class="card-text">@review.Content</p>
+                                    </small>
+                                </div>
+                                <div class="col-1">
+                                    <button class="btn btn-outline-danger" @onclick="() => DeleteReview(review.Id)">Delete</button>            
+                                </div>
+                            </div>
+                        </div>
+                        
                     </div>
                     <div class="card-footer">
                         <p class="card-text">
-                            <button class="btn-sm btn-danger" @onclick="() => DeleteReview(review.Id)"><span class="oi oi-delete" aria-hidden="true"></span></button>
-                            <small> - Stars: @review.Stars Posted on: @review.ReviewDate</small>
+                            <small>Language: @review.Language - Sentiment: @review.Sentiment - Created: @review.ReviewDate</small>
                         </p>
                     </div>
                 </div>
@@ -80,10 +107,6 @@
                         <div class="form-group">
                             <label for="title">Title</label>
                             <input type="text" class="form-control" id="title" placeholder="Review Title" @bind="ReviewModel.Title"/>
-                        </div>
-                        <div class="form-group">
-                            <label for="stars">Stars</label>
-                            <input type="number" class="form-control" id="stars" placeholder="Stars" @bind="ReviewModel.Stars"/>
                         </div>
                         <div class="form-group">
                             <label for="content">Content</label>

@@ -84,7 +84,8 @@ namespace ReviewApp.Migrations
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     review_id = table.Column<long>(nullable: false),
                     query_date = table.Column<DateTime>(type: "timestamp", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
-                    json = table.Column<string>(type: "text", nullable: true),
+                    language = table.Column<string>(type: "varchar(50)", nullable: true),
+                    language_score = table.Column<double>(nullable: false),
                     sentiment = table.Column<string>(type: "varchar(50)", nullable: true),
                     positive_score = table.Column<double>(nullable: false),
                     neutral_score = table.Column<double>(nullable: false),
@@ -156,7 +157,8 @@ namespace ReviewApp.Migrations
                 name: "IX_text_analysis_review_id",
                 schema: "review_application",
                 table: "text_analysis",
-                column: "review_id");
+                column: "review_id",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "idx_text_analysis_sentiment",
